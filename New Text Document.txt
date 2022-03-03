@@ -1,0 +1,124 @@
+create create one folder inside node,name it as employeeEX,create 2 folders inside these this folder
+(1)controllers--> inside this folder create fie=>employee.controller.js
+(2)models-->inside this folder create 2 files=>(1)employee.model.js(2) db.js
+(3) in employeeEX i.e. in root folder create app.js
+(4) you will need postman app to post,update,delete  
+npm init
+npm install mongoose
+npm install express
+npm i jsonwebtoken
+...............................app.js.....file.........................
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const EmployeeCtrl = require("./controllers/employee.controller");
+
+const app = express();
+const port = process.env.PORT || 8888;
+app.use(bodyParser.json());
+
+const emp = new EmployeeCtrl();
+app.post("/emp", emp.create);
+app.put("/emp/:id", emp.update);
+app.get("/emp", emp.getAll);
+app.get("/emp/:id", emp.getSingle);
+
+app.listen(port, () => {
+  console.log("console is listing to" + port);
+});
+
+
+..........................employee.controller.js..........file..........
+
+const Employee = require("../models/employee.model");
+
+class EmployeeCtrl {
+  create(req, res) {
+    // const e = {
+    //   name: "pu",
+    //   mobile: "56892",
+    //   email: "pu@gmail.com",
+    //   city: "pune"
+    // };
+    const emp = new Employee(req.body);
+    emp
+      .save()
+      .then(result => {
+        console.log("stored..", result);
+        res.send(result);
+        res.end();
+      })
+      .catch(err => console.log("error", err));
+  }
+  update(req, res) {
+    const id = req.param.id;
+    Employee.findByIdAndUpdate(id, req.body)
+      .then(result => {
+        res.send(result);
+      })
+      .catch(err => {
+        res.send();
+      });
+  }
+  delete(req, res) {}
+  getAll(req, res) {
+    Employee.find({})
+      .then(result => {
+        res.send(result);
+      })
+      .catch(err => {
+        res.status(404).send(err);
+      });
+  }
+  getSingle(req, res) {
+    Employee.findById(req.params.id)
+      .then(result => {
+        res.send(result);
+      })
+      .catch(err => {
+        res.status(404).send(err);
+      });
+  }
+}
+module.exports = EmployeeCtrl;
+...............................................employee.model.js.........file......................
+const mongoose = require("mongoose");
+require("./db");
+
+const empSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  mobile: { type: String, unique: true },
+  email: "",
+  city: "",
+  regDate: { type: Date, default: Date.now() }
+});
+
+const Employee = mongoose.model("Employee", empSchema); //'Employee' is collection name
+
+module.exports = Employee;
+
+...............................................db.js..............file..............................
+
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/emp");
+var db = mongoose.connection;
+
+db.on("connected", function() {
+  console.log("mongoose default conncetion open to"); //when successfully connected
+});
+
+db.on("error", function(err) {
+  console.log("mongoose err" + err); //when err
+});
+
+db.on("disconnected", function() {
+  console.log("mongoose connecttion lost"); //when connection lost
+});
+
+process.on("SIGINT", function() {
+  db.close(function() {
+    //if the node process, close the mongoose collection
+    console.log("mongoose connection terminated through app termination");
+    process.exit(0);
+  });
+});
