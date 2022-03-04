@@ -14,7 +14,7 @@ exports.sendEmail = emailData => {
         // .......................................................
         auth: {
             user: "vishalpatait.techila@gmail.com",
-            pass: "7276745571"
+            pass: "1222222"
         }
     });
     return transporter
