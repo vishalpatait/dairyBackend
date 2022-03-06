@@ -52,20 +52,25 @@ class CustomerMilkCtrl {
       });
   }
   async getSingle(req, res) {
+
     await CustomerMilk.findById(req.params.id)
-      .populate("customer")
+      .populate("Customer")
       .then(result => {
         res.send(result);
+        console.log("req.body.customer");
       })
       .catch(err => {
         res.status(404).send(err);
+        // console.log("req.body.customer");
       });
   }
   async myUserData(req, res) {
+    // console.log("req.body.customer");
+
     await CustomerMilk.find({
       customer: req.body.customer
     })
-      .populate("customer")
+      .populate("Customer")
       .exec((err, user) => {
         if (err) {
           res.json({ status: false, message: "error while searching" });
