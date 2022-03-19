@@ -13,10 +13,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use("/user", require("./routes/User.route"));
-
 app.use("/customer", require("./routes/customer.route"));
 app.use("/customerMilk", require("./routes/customerMilk.route"));
 app.use("/milktype", require("./routes/milktype.route"));
+app.use("/myUserMilk", require("./routes/userMilk.route"));
 app.listen(port, () => {
   console.log("console is listing to" + port);
 });
@@ -27,7 +27,7 @@ app.listen(port, () => {
 //    "mobile":7775000321,
 //    "role":"admin"
 
-// "name":"test",    
+// "name":"test",
 // "email":test@gmail.com",
 //    "password":"test",
 //    "mobile":6775000321,

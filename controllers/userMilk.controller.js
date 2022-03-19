@@ -1,18 +1,9 @@
-const CustomerMilk = require("../models/CustomerMilk.model");
-
+const UserMilk = require("../models/userMilk.model");
 const _ = require("lodash");
-class CustomerMilkCtrl {
+class UserMilkCtrl {
   async create(req, res) {
-    const custmrMilk = new CustomerMilk(req.body);
-    // const customer = req.body.customer;
-    // let cstmr = await Customer.findOne({ _id: customer });
-
-    // if (cstmr) {
-    //   cstmr = _.extend(cstmr, req.body);
-    //   await cstmr.save();
-    // }
-
-    await custmrMilk
+    const usrMilk = new UserMilk(req.body);
+    await usrMilk
       .save()
       .then(result => {
         // console.log("stored..", result);
@@ -22,7 +13,7 @@ class CustomerMilkCtrl {
       .catch(err => console.log("error", err));
   }
   async update(req, res) {
-    await CustomerMilk.findOneAndUpdate(
+    await UserMilk.findOneAndUpdate(
       { _id: req.params.id },
       req.body,
       (err, result) => {
@@ -32,7 +23,7 @@ class CustomerMilkCtrl {
     );
   }
   async delete(req, res) {
-    await CustomerMilk.findByIdAndDelete(req.params.id)
+    await UserMilk.findByIdAndDelete(req.params.id)
       .then(result => {
         res.send(result);
       })
@@ -41,8 +32,8 @@ class CustomerMilkCtrl {
       });
   }
   async getAll(req, res) {
-    await CustomerMilk.find({})
-      .populate("customer") // customer is from customermilk model from line no 6
+    await UserMilk.find({})
+      .populate("userId")
       .then(result => {
         res.send(result);
       })
@@ -51,24 +42,20 @@ class CustomerMilkCtrl {
       });
   }
   async getSingle(req, res) {
-    await CustomerMilk.findById(req.params.id)
-      .populate("customer")
+    await UserMilk.findById(req.params.id)
+      .populate("userId")
       .then(result => {
         res.send(result);
-        console.log("req.body.customer");
       })
       .catch(err => {
         res.status(404).send(err);
-        // console.log("req.body.customer");
       });
   }
-  async myUserData(req, res) {
-    // console.log("req.body.customer");
-
-    await CustomerMilk.find({
-      customer: req.body.customer
+  async userMilkData(req, res) {
+    await UserMilk.find({
+      userId: req.body.userId
     })
-      .populate("customer")
+      .populate("userId")
       .exec((err, user) => {
         if (err) {
           res.json({ status: false, message: "error while searching" });
@@ -76,4 +63,4 @@ class CustomerMilkCtrl {
       });
   }
 }
-module.exports = CustomerMilkCtrl;
+module.exports = UserMilkCtrl;
