@@ -7,7 +7,7 @@ const customerMilkSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer"
     },
-
+    milkType: { type: String },
     regDate: { type: Date, default: Date.now() }
   },
   { collection: "customermilk" }
